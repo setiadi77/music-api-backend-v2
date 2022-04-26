@@ -23,15 +23,8 @@ class SongsHandler {
                 duration,
                 albumId
             } = request.payload;
-            
-            const songId = await this._service.addSong({
-                title,
-                year,
-                performer,
-                genre,
-                duration,
-                albumId
-            });
+            //saran
+            const songId = await this._service.addSong(request.payload);
 
             const response = h.response({
                 status: 'success',
