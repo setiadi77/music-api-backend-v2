@@ -3,6 +3,7 @@ require('dotenv').config();
 const Hapi = require('@hapi/hapi');
 const Jwt = require('@hapi/jwt');
 const ClientError = require("./exceptions/ClientError");
+const TokenManager = require('./tokenize/TokenManager');
 
 //albums
 const albums = require('./api/albums');
@@ -22,10 +23,22 @@ const UsersValidator = require('./validator/users');
 // authentications
 const authentications = require('./api/authentications');
 const AuthenticationsService = require('./services/AuthenticationsService');
-const TokenManager = require('./tokenize/TokenManager');
 const AuthenticationsValidator = require('./validator/authentications');
 
+// playlists
+const playlists = require('./api/playlists');
+const PlaylistsService = require('./services/PlaylistsService');
+const PlaylistsValidator = require('./validator/playlists');
+
+// collaborations
+const collaborations = require('./api/collaborations');
+const CollaborationsService = require('./services/CollaborationsService');
+const CollaborationsValidator = require('./validator/collaborations');
+
 const init = async () => {
+
+    const collaborationsService = new CollaborationsService();
+    const playlistsService = new PlaylistsService(collaborationsService);
     const albumsService = new AlbumsService();
     const songService = new SongsService();
     const usersService = new UsersService();
@@ -41,27 +54,27 @@ const init = async () => {
         },
     });
 
-    // await server.register([
-    //     {
-    //         plugin: Jwt,
-    //     },
-    // ]);
+    await server.register([
+        {
+            plugin: Jwt,
+        },
+    ]);
 
-    // server.auth.strategy('musicapp_jwt', 'jwt', {
-    //     keys: process.env.ACCESS_TOKEN_KEY,
-    //     verify: {
-    //         aud: false,
-    //         iss: false,
-    //         sub: false,
-    //         maxAgeSec: process.env.ACCESS_TOKEN_AGE,
-    //     },
-    //     validate: (artifacts) => ({
-    //         isValid: true,
-    //         credentials: {
-    //             id: artifacts.decoded.payload.id,
-    //         },
-    //     }),
-    // });
+    server.auth.strategy('musicapp_jwt', 'jwt', {
+        keys: process.env.ACCESS_TOKEN_KEY,
+        verify: {
+            aud: false,
+            iss: false,
+            sub: false,
+            maxAgeSec: process.env.ACCESS_TOKEN_AGE,
+        },
+        validate: (artifacts) => ({
+            isValid: true,
+            credentials: {
+                id: artifacts.decoded.payload.id,
+            },
+        }),
+    });
 
     //saran
     await server.register([
@@ -95,8 +108,24 @@ const init = async () => {
                 validator: AuthenticationsValidator,
             },
         },
-    ])
-    //saran
+        {
+            plugin: playlists,
+            options: {
+                songService,
+                service: playlistsService,
+                validator: PlaylistsValidator,
+            },
+        },
+        {
+            plugin: collaborations,
+            options: {
+                collaborationsService,
+                playlistsService,
+                validator: CollaborationsValidator,
+            },
+        },
+    ]);
+
     server.ext('onPreResponse', (request, h) => {
         const { response } = request;
 
@@ -113,7 +142,7 @@ const init = async () => {
     });
 
     await server.start();
-    console.log(`Server berjalan pada ${server.info.uri}`);
+    console.log(`Server sudah berjalan pada ${server.info.uri}`);
 };
 
 init();

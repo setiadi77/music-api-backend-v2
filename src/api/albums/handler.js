@@ -10,7 +10,7 @@ class AlbumsHandler {
         this.putAlbumByIdHandler = this.putAlbumByIdHandler.bind(this);
         this.deleteAlbumByIdHandler = this.deleteAlbumByIdHandler.bind(this);
     }
-    //saran
+
     async postAlbumHandler(request, h) {
         this._validator.validateAlbumPayload(request.payload);
         
