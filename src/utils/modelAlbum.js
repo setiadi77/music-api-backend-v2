@@ -1,7 +1,7 @@
 const mapDBModelAlbum = ({ id, name, year }) => ({
-    id,
-    name,
-    year
+  id,
+  name,
+  year,
 });
 
-module.exports = { mapDBModelAlbum }
+module.exports = { mapDBModelAlbum };

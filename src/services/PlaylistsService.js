@@ -116,7 +116,7 @@ const { mapDBToModel } = require('../utils');
 
 //     //     const queryPlaylist = {
 //     //         text: `SELECT playlists.id, playlists.name, users.username FROM playlists
-//     //                 INNER JOIN users ON users.id = playlists.owner 
+//     //                 INNER JOIN users ON users.id = playlists.owner
 //     //                 WHERE playlists.id = $3 OR owner = $1 and playlists.id = $2`,
 //     //         values: [owner, id, playlistId],
 //     //     };
@@ -155,29 +155,29 @@ const { mapDBToModel } = require('../utils');
 //           WHERE playlists.id = $1`,
 //           values: [id],
 //         };
-    
+
 //         const result = await this._pool.query(query);
-    
+
 //         if (!result.rows.length) {
 //           throw new NotFoundError('Playlist not found');
 //         }
-    
+
 //         const songs = result.rows.map((row) => ({
 //           id: row.song_id,
 //           title: row.song_title,
 //           performer: row.performer,
 //         }));
-    
+
 //         const playlstResult = {
 //           id: result.rows[0].id,
 //           name: result.rows[0].name,
 //           username: result.rows[0].username,
 //           songs,
 //         };
-    
+
 //         return playlstResult;
 //       }
-      
+
 //     // async deleteSongFromPlaylist(id, playlistId) {
 //     //     const query = {
 //     //         text: 'DELETE FROM playlistsongs WHERE song_id = $1 AND playlist_id = $2 RETURNING id',
@@ -196,9 +196,9 @@ const { mapDBToModel } = require('../utils');
 //           text: 'DELETE FROM playlist_songs WHERE playlist_id = $1 AND song_id = $2 RETURNING id',
 //           values: [playlistId, songId],
 //         };
-    
+
 //         const result = await this._pool.query(query);
-    
+
 //         if (!result.rowCount) {
 //           throw new NotFoundError(
 //             'Gagal menghapus playlist. Id tidak ditemukan',
